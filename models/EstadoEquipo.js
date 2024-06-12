@@ -15,11 +15,13 @@ const EstadoEquipoShema = new mongoose.Schema({
     fechaCreacion: {
         type: Date, 
         required: true,
+        default: Date.now,
     },
 
     fechaActualizacion: {
         type: Date,
         required: true,
+        default: Date.now,
     }
 });
 

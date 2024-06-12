@@ -2,6 +2,12 @@ const express = require('express');
 require ('./db/mongoDB_Connection');
 const cors = require ('cors');
 require ('dotenv').config();
+const authRoutes = require('./router/auth');
+const estadoEquipoRoutes = require('./router/estadoEquipo');
+const inventarioRoutes = require('./router/inventario');
+const marcaRoutes = require('./router/marca');
+const tipoEquipoRoutes = require('./router/tipoEquipo');
+const usuarioRoutes = require('./router/usuario');
 
 const app = express();
 app.use(express.json());
@@ -17,11 +23,11 @@ app.get('/', (req, res) => {
     res.send('felicidades');
 })
 
-app.use('/usuario', require('./router/usuario')); 
-app.use('/marca', require('./router/marca')); 
-app.use('/estado-equipo', require('./router/estadoEquipo')); 
-app.use('/tipo-equipo', require('./router/tipoEquipo')); 
-app.use('/inventario', require('./router/inventario')); 
-app.use('/auth', require('./router/auth'));
+app.use('/auth', authRoutes); 
+app.use('/estadoEquipo', estadoEquipoRoutes); 
+app.use('/inventario', inventarioRoutes); 
+app.use('/marca', marcaRoutes); 
+app.use('/tipoEquipo', tipoEquipoRoutes); 
+app.use('/usuario', usuarioRoutes);
 
 main();

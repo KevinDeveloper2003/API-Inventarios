@@ -1,8 +1,8 @@
 const { Router } = require('express');
 const EstadoEquipo = require('../models/EstadoEquipo'); 
 const { validationResult, check } = require('express-validator');
-const {validarJWT} = require('../middleware/validar-jwt');
-const {validarRolAdmin} = require('../middleware/validar-rol-admin');
+const {validarJWT} = require('../middleware/valide-jwt');
+const {validarRolAdmin} = require('../middleware/valide-admin-rol');
 
 const router = Router();
 
