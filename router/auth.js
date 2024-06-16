@@ -6,7 +6,7 @@ const {generarJWT} = require('../helpers/jwt');
 
 const router = Router();
 
-router.post('/', [
+router.post('/', [ 
     check('email', 'invalid.email').isEmail(),
     check('password', 'invalid.password').not().isEmpty(),
 
