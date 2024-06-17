@@ -1,12 +1,12 @@
 const { Router } = require('express');
 const EstadoEquipo = require('../models/EstadoEquipo'); 
 const { validationResult, check } = require('express-validator');
-const {validarJWT} = require('../middleware/valide-jwt');
-const {validarRolAdmin} = require('../middleware/valide-admin-rol');
+const {valideJWT} = require('../middleware/valide-jwt');
+const {valideRolAdmin} = require('../middleware/valide-admin-rol');
 
 const router = Router();
 
-router.post('/',[validarJWT, validarRolAdmin, 
+router.post('/',[valideJWT, valideRolAdmin], [
   check('nombre', 'invalid.nombre').not().isEmpty(),
   check('estado', 'invalid.estado').isIn(['Activo', 'Inactivo'])
 
@@ -34,59 +34,58 @@ router.post('/',[validarJWT, validarRolAdmin,
 
   } catch (error) {
     console.error(error);
-    res.status(500).send('ocurrio un error');
+    res.status(500).send('Lo sentimos, ocurrio un error');
   }
 });
 
-// Ruta para obtener todos los estados de Equipos
-router.get('/', [validarJWT, validarRolAdmin], async function (req, res) {
+// Ruta para obtener todos los estadoEquipos
+router.get('/', [valideJWT, valideRolAdmin], async function (req, res) {
   try {
     const estadoEquipos = await EstadoEquipo.find();
     res.send(estadoEquipos);
   } catch (error) {
     console.log(error);
-    res.status(500).send('Ocurrió un error');
+    res.status(500).send('Lo sentimos, Ocurrió un error');
   }
 });
 
-router.put('/:estadoEquipoId', [validarJWT, validarRolAdmin], [
+router.put('/:estadoEquipoId', [valideJWT, valideRolAdmin], [
   check('nombre', 'invalid.nombre').not().isEmpty(),
   check('estado', 'invalid.estado').isIn(['Activo', 'Inactivo'])
 ], async function (req, res) {
   try {
-    // Validar la expresion usando express-validator
+    // validar la Peticion usando ExpressValidator
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ mensaje: errors.array() }); 
     }
 
-    // buscar el Estado de Equipo por su ID
+    // buscar estadoEquipo por ID
     let estadoEquipo = await EstadoEquipo.findById(req.params.estadoEquipoId);
 
-    // rectificar si estadoequipo existe
+    // verificar si estadoEquipo existe
     if (!estadoEquipo) {
       return res.status(400).send('Estado equipo no existe');
     }
 
-    // Actualizar las propiedades de estado equipo
+    // Actualizar Estado Equipo
     estadoEquipo.nombre = req.body.nombre;
     estadoEquipo.estado = req.body.estado;
     estadoEquipo.fechaActualizacion = new Date();
 
-    // guaradar el nuevo estado equipo actualizado en la BD
+    // guardar la Actualizacion en la base de datos
     estadoEquipo = await estadoEquipo.save();
 
-    // enviar el estadoequipo actualizado como una respuesta
+    // enviar la respuesta de estado equipo a la BD
     res.send(estadoEquipo);
 
   } catch (error) {
      console.error(error);
-    res.status(500).send('Ocurrió un error');
+    res.status(500).send('Lo sentimos, Ocurrió un error');
   }
 });
 
-//borrar el estadoEquipo
-router.delete('/:deleteId', [validarJWT, validarRolAdmin], async (req, res) => {
+router.delete('/:deleteId', [valideJWT, valideRolAdmin], async (req, res) => {
   try {
     const estadoEquipo = await EstadoEquipo.findByIdAndDelete(req.params.deleteId);
 
@@ -94,12 +93,11 @@ router.delete('/:deleteId', [validarJWT, validarRolAdmin], async (req, res) => {
       return res.status(400).send('estadoEquipo no existe');
     }
 
-    // enviar el estadoequipo actualizado como una respuesta
     res.send(estadoEquipo);
 
   } catch (error) {
     console.log(error);
-    res.status(500).send('Ocurrió un error');
+    res.status(500).send('Lo sentimos, Ocurrió un error');
   }
 });
 

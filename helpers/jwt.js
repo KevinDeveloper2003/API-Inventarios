@@ -6,11 +6,11 @@ const ingresarJWT = (usuario) => {
         _id: usuario._id,
         nombre: usuario.nombre,
         email: usuario.email,
-        pssword: usuario.pssword,
+        password: usuario.password,
         rol: usuario.rol,
         estado: usuario.estado 
     };
-    const token = jwt.sign(payload, '123456', {expiresIn: '1h'});
+    const token = jwt.sign(payload, '654321', {expiresIn: '1h'});
     return token;
 };
 

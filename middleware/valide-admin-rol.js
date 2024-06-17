@@ -1,13 +1,11 @@
 const jwt = require('jsonwebtoken');
 
-const valideRoplAdmin = (req, res, next) => {
-    if (req.payload.rol != 'administrador') {
+const valideRolAdmin = (req, res, next) => {
+    if (req.payload.rol != 'Administrador') {
         return res.status(401).json({message: 'Error Unauthorized'});
     }
     next();
 
 };
 
-module.exports = {
-    valideRoplAdmin
-};
+module.exports = {valideRolAdmin};

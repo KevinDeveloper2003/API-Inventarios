@@ -1,14 +1,14 @@
 const { Router } = require('express');
 const TipoEquipo = require('../models/TipoEquipo');
 const { validationResult, check } = require('express-validator');
-const { validarJWT } = require('../middleware/valide-jwt');
-const { validarRolAdmin } = require('../middleware/valide-admin-rol');
+const { valideJWT } = require('../middleware/valide-jwt');
+const { valideRolAdmin } = require('../middleware/valide-admin-rol');
 
 const router = Router();
 
 
 // metodo para aniadir un nuevo tipo de equipo a la base de datos (validado)
-router.post('/', [validarJWT, validarRolAdmin], [
+router.post('/', [valideJWT, valideRolAdmin], [
   check('nombre', 'invalid.nombre').not().isEmpty(),
   check('estado', 'invalid.estado').isIn(['Activo', 'Inactivo'])
 
@@ -36,24 +36,24 @@ router.post('/', [validarJWT, validarRolAdmin], [
 
   } catch (error) {
     console.error(error);
-    res.status(500).send('ocurrio un error');
+    res.status(500).send('Lo Sentimos, Ocurrió un error');
   }
 });
 
 // Ruta para obtener todos los tipoEquipos
-router.get('/', [validarJWT, validarRolAdmin], async function (req, res) {
+router.get('/', [valideJWT, valideRolAdmin], async function (req, res) {
   try {
     const tipoEquipos = await TipoEquipo.find();
     res.send(tipoEquipos);
   } catch (error) {
     console.log(error);
-    res.status(500).send('Ocurrió un error');
+    res.status(500).send('Lo Sentimos, Ocurrió un error');
   }
 });
 
 
 // metodo para actualizar un tipo de equipo validado
-router.put('/:tipoEquipoId', [validarJWT, validarRolAdmin], async function (req, res) {
+router.put('/:tipoEquipoId', [valideJWT, valideRolAdmin], async function (req, res) {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -63,7 +63,7 @@ router.put('/:tipoEquipoId', [validarJWT, validarRolAdmin], async function (req,
     let tipoEquipo = await tipoEquipo.findById(req.params.tipoEquipoId);
 
     if (!tipoEquipo) {
-      return res.status(400).send('tipoEquipo no existe');
+      return res.status(400).send('Lo sentimos, TipoEquipo no existe');
     }
 
     tipoEquipo.nombre = req.body.nombre;
@@ -76,25 +76,25 @@ router.put('/:tipoEquipoId', [validarJWT, validarRolAdmin], async function (req,
 
   } catch (error) {
     console.log(error);
-    res.status(500).send('Ocurrió un error');
+    res.status(500).send('Los Sentimos, Ocurrió un error');
   }
 
 });
 
 
 // metodo para borrar un tipo de equipo
-router.delete('/:deleteId', [validarJWT, validarRolAdmin], async (req, res) => {
+router.delete('/:deleteId', [valideJWT, valideRolAdmin], async (req, res) => {
   try {
     const tipoEquipo = await TipoEquipo.findByIdAndDelete(req.params.deleteId);
 
     if (!tipoEquipo) {
-      return res.status(400).send('tipoEquipo no existe');
+      return res.status(400).send('Lo Sentimos, TipoEquipo no existe');
     }
 
     res.send(tipoEquipo);
   } catch (error) {
     console.log(error);
-    res.status(500).send('Ocurrió un error');
+    res.status(500).send('Lo sentimos, Ocurrió un error');
   }
 });
 

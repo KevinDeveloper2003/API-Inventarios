@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const EstadoEquipoShema = new mongoose.Schema({
+const EstadoEquipoSchema = new mongoose.Schema({
     nombre: {
         type: String,
         required: true,
@@ -25,4 +25,4 @@ const EstadoEquipoShema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('EstadoEquipo', EstadoEquipoShema);
+module.exports = mongoose.model('EstadoEquipo', EstadoEquipoSchema);

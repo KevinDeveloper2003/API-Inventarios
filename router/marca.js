@@ -1,12 +1,12 @@
 const { Router } = require('express');
 const Marca = require('../models/Marca'); 
 const { validationResult, check } = require('express-validator');
-const {validarJWT} = require('../middleware/valide-jwt');
-const {validarRolAdmin} = require('../middleware/valide-admin-rol');
+const {valideJWT} = require('../middleware/valide-jwt');
+const {valideRolAdmin} = require('../middleware/valide-admin-rol');
 
 const router = Router();
 
-router.post('/',[validarJWT, validarRolAdmin], [
+router.post('/',[valideJWT, valideRolAdmin], [
   check('nombre', 'invalid.nombre').not().isEmpty(),
   check('estado', 'invalid.estado').isIn(['Activo', 'Inactivo'])
 
@@ -29,12 +29,12 @@ router.post('/',[validarJWT, validarRolAdmin], [
 
   } catch (error) {
     console.error(error);
-    res.status(500).send('ocurrio un error');
+    res.status(500).send('lo sentimos, ocurrio un error');
   }
 });
 
 // Ruta para obtener todos los marcas
-router.get('/', [validarJWT, validarRolAdmin], async function (req, res) {
+router.get('/', [valideJWT, valideRolAdmin], async function (req, res) {
   try {
     const marcas = await Marca.find();
     res.send(marcas);
@@ -46,7 +46,7 @@ router.get('/', [validarJWT, validarRolAdmin], async function (req, res) {
 
 
 //metodo para actualizar una marca validada
-router.put('/:marcaId', [validarJWT, validarRolAdmin], async function (req, res) { 
+router.put('/:marcaId', [valideJWT, valideRolAdmin], async function (req, res) { 
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()){
@@ -55,7 +55,7 @@ router.put('/:marcaId', [validarJWT, validarRolAdmin], async function (req, res)
 
     let marca = await Marca.findById(req.params.marcaId);
     if(!marca){
-        return res.status(400).send('Marca no existe');
+        return res.status(400).send('La Marca no existe');
     }
 
     marca.nombre = req.body.nombre;
@@ -75,7 +75,7 @@ router.put('/:marcaId', [validarJWT, validarRolAdmin], async function (req, res)
 
 
 //metodo para eliminar una marca
-router.delete('/:deleteId', [validarJWT, validarRolAdmin], async (req, res) => {
+router.delete('/:deleteId', [valideJWT, valideRolAdmin], async (req, res) => {
   try {
     const marca = await Marca.findByIdAndDelete(req.params.deleteId);
 

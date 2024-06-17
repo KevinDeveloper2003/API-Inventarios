@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const tipoEquipoSchema = new mongoose.Schema({
+const TipoEquipoSchema = new mongoose.Schema({
     nombre: {
         type: String, 
         required: true,
@@ -24,4 +24,4 @@ const tipoEquipoSchema = new mongoose.Schema({
 
 });
 
-module.exports = mongoose.model('TipoEquipo', tipoEquipoSchema);
+module.exports = mongoose.model('TipoEquipo', TipoEquipoSchema);

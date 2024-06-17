@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+const {Schema, model} = require('mongoose');
 
-const inventarioSchema = new mongoose.Schema({
+const InventarioSchema = Schema({
     serial: {
         type:String, 
         required:true, 
@@ -36,8 +36,8 @@ const inventarioSchema = new mongoose.Schema({
     },
     usuario:{ 
         type: Schema.Types.ObjectId,
-         ref: 'Usuario', 
-         required: false,
+        ref: 'Usuario', 
+        required: false,
     },
     marca: { 
         type: Schema.Types.ObjectId, 
@@ -64,4 +64,4 @@ const inventarioSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('Inventario', inventarioSchema);
+module.exports = model('Inventario', InventarioSchema);

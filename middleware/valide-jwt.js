@@ -8,7 +8,7 @@ const valideJWT = (req, res, next) => {
     }
 
     try {
-        const payload = jwt.verify(token, '123456');
+        const payload = jwt.verify(token, '654321');
         req.payload = payload;
         next();
     }
@@ -18,6 +18,4 @@ const valideJWT = (req, res, next) => {
     }
 };
 
-module.exports = {
-    valideJWT
-};
+module.exports = {valideJWT};

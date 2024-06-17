@@ -2,11 +2,21 @@ const { Router } = require('express');
 const Usuario = require('../models/Usuario'); 
 const bcrypt = require('bcryptjs');
 const { validationResult, check } = require('express-validator');
-const {validarJWT} = require('../middleware/valide-jwt');
-const {validarRolAdmin} = require('../middleware/valide-admin-rol');
+const {valideJWT} = require('../middleware/valide-jwt');
+const {valideRolAdmin} = require('../middleware/valide-admin-rol');
 
 const router = Router();
 
+// Ruta para obtener todos los usuarios
+router.get('/', [valideJWT, valideRolAdmin], async function (req, res) {
+  try {
+    const usuarios = await Usuario.find();
+    res.send(usuarios);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Ocurrió un error');
+  }
+});
 
 // metodo para agregar un nuevo usuario a la BD
 router.post('/', [
@@ -49,23 +59,12 @@ router.post('/', [
 
   } catch (error) {
     console.error(error);
-    res.status(500).send('ocurrio un error');
-  }
-});
-
-// Ruta para obtener todos los usuarios
-router.get('/', [validarJWT, validarRolAdmin], async function (req, res) {
-  try {
-    const usuarios = await Usuario.find();
-    res.send(usuarios);
-  } catch (error) {
-    console.log(error);
     res.status(500).send('Ocurrió un error');
   }
 });
 
 //metodo para actaulizar un usuario por su id validado
-router.put('/:usuarioId', [validarJWT, validarRolAdmin], async function (req, res) { 
+router.put('/:usuarioId', [valideJWT, valideRolAdmin], async function (req, res) { 
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()){
@@ -75,7 +74,7 @@ router.put('/:usuarioId', [validarJWT, validarRolAdmin], async function (req, re
     let usuario = await Usuario.findById(req.params.usuarioId);
 
     if(!usuario){
-        return res.status(400).send('usuario no existe');
+        return res.status(400).send('Usuario no existe');
     }
 
     usuario.nombre = req.body.nombre;
@@ -100,7 +99,7 @@ router.put('/:usuarioId', [validarJWT, validarRolAdmin], async function (req, re
 
 
 // metodo para eliminar un usuario por su id
-router.delete('/:deleteId', [validarJWT, validarRolAdmin], async (req, res) => {
+router.delete('/:deleteId', [valideJWT, valideRolAdmin], async (req, res) => {
   try {
     const usuario = await Usuario.findByIdAndDelete(req.params.deleteId);
 

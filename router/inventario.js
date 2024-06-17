@@ -1,13 +1,13 @@
 const { Router } = require('express');
 const Inventario = require('../models/Inventario');
 const { validationResult, check } = require('express-validator');
-const {validarJWT} = require('../middleware/valide-jwt');
-const {validarRolAdmin} = require('../middleware/valide-admin-rol');
+const {valideJWT} = require('../middleware/valide-jwt');
+const {valideRolAdmin} = require('../middleware/valide-admin-rol');
 
 const router = Router();
 
 // metodo para aniadir un inventario validado
-router.post('/',[validarJWT, validarRolAdmin], [
+router.post('/',[valideJWT, valideRolAdmin], [
     check('serial', 'invalid.serial').not().isEmpty(),
     check('modelo', 'invalid.modelo').not().isEmpty(),
     check('descripcion', 'invalid.descripcion').not().isEmpty(),
@@ -25,7 +25,7 @@ router.post('/',[validarJWT, validarRolAdmin], [
         if (!errors.isEmpty()) {
             return res.status(400).json({ errores: errors.array() });
         }
-// chekamos siexiste un inventario
+// chekamos si existe un inventario
         const existeInventarioPorSerial = await Inventario.findOne({ serial: req.body.serial });
         if (existeInventarioPorSerial) {
             return res.status(400).send('serial ya existe para otro equipo');
@@ -52,12 +52,12 @@ router.post('/',[validarJWT, validarRolAdmin], [
 
     } catch (error) {
         console.error(error);
-        res.status(500).send('ocurrio un error');
+        res.status(500).send('Lo sentimos, ocurrio un error');
     }
 });
 
 // Ruta para obtener todos los inventarios
-router.get('/', validarJWT,  async function (req, res) {
+router.get('/', valideJWT,  async function (req, res) {
     try {
         const inventarios = await Inventario.find().populate([
             {
@@ -80,13 +80,13 @@ router.get('/', validarJWT,  async function (req, res) {
         res.send(inventarios);
     } catch (error) {
         console.log(error);
-        res.status(500).send('Ocurrió un error');
+        res.status(500).send('Lo sentimos, Ocurrió un error');
     }
 });
 
 
 // metodo para actualizar un inventario
-router.put('/:inventarioId', [validarJWT, validarRolAdmin], async function (req, res) { 
+router.put('/:inventarioId', [valideJWT, valideRolAdmin], async function (req, res) { 
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()){
@@ -117,13 +117,13 @@ router.put('/:inventarioId', [validarJWT, validarRolAdmin], async function (req,
   
     } catch (error) {
       console.log(error);
-      res.status(500).send('Ocurrió un error');
+      res.status(500).send('Lo sentimos, Ocurrió un error');
     }
   
   });
 
   // metodo para eliminar el inventario
-  router.delete('/:deleteId', [validarJWT, validarRolAdmin], async (req, res) => {
+  router.delete('/:deleteId', [valideJWT, valideRolAdmin], async (req, res) => {
     try {
       const inventario = await Inventario.findByIdAndDelete(req.params.deleteId);
   
@@ -134,7 +134,7 @@ router.put('/:inventarioId', [validarJWT, validarRolAdmin], async function (req,
       res.send(inventario);
     } catch (error) {
       console.log(error);
-      res.status(500).send('Ocurrió un error');
+      res.status(500).send('Lo sentimos, Ocurrió un error');
     }
   });
 

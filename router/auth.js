@@ -2,11 +2,11 @@ const { Router } = require('express');
 const Usuario = require('../models/Usuario');
 const bcrypt = require('bcryptjs');
 const { validationResult, check } = require('express-validator');
-const {generarJWT} = require('../helpers/jwt');
+const {ingresarJWT} = require('../helpers/jwt');
 
 const router = Router();
 
-router.post('/', [ 
+router.post('/', [
     check('email', 'invalid.email').isEmail(),
     check('password', 'invalid.password').not().isEmpty(),
 
@@ -19,20 +19,20 @@ router.post('/', [
 
         const usuario = await Usuario.findOne({ email: req.body.email });
         if (!usuario) {
-            return res.status(400).send('Usuario no encontrado');
+            return res.status(400).send('Lo sentimos, Usuario no encontrado');
         }
 
 
         //Validacion de contrasenias
         const esIgual = bcrypt.compareSync(req.body.password, usuario.password);
         if (!esIgual) { 
-            return res.status(400).json({ mensaje: 'Usuario no encontrado' });
+            return res.status(400).json({ mensaje: 'Lo sentimos, Usuario no encontrado' });
         }
 
 
-// token de JWT
+// token JWT
 
-const token = generarJWT(usuario)  ;
+const token = ingresarJWT(usuario)  ;
 
         res.json({
             _id: usuario._id, nombre: usuario. nombre,
@@ -42,7 +42,7 @@ const token = generarJWT(usuario)  ;
 
     } catch (error) {
         console.log(error);
-        res.status(500).json({ mensaje: 'error interno del servidor' });
+        res.status(500).json({ mensaje: 'Lo sentimos, Error interno del servidor' });
     }
 });
     module.exports = router;
